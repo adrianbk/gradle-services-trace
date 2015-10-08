@@ -20,7 +20,7 @@ task trace << {
 }
 
 void traceRoute(URL location) {
-    LOGGER.lifecycle("Starting traceroute")
+    logger.lifecycle("Starting traceroute")
     def standardOut = new StringBuffer(), standardErr = new StringBuffer()
     String command
     if (org.gradle.internal.os.OperatingSystem.current().windows) {
