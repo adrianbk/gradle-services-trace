@@ -1,0 +1,35 @@
+
+String url = "https://services.gradle.org/versions/all"
+
+int counter = project.hasProperty("counter") ? project.property("counter") : 10
+task build << {
+    try {
+        (counter).times {
+            new URL(url).text
+            println "done $it"
+        }
+    } catch (IOException e) {
+        traceRoute(new URL(url))
+        throw e
+    }
+
+}
+
+
+void traceRoute(URL location) {
+    def standardOut = new StringBuffer(), standardErr = new StringBuffer()
+    String command
+    if (org.gradle.internal.os.OperatingSystem.current().windows) {
+        command = "tracert ${location.getHost()}"
+    } else {
+        command = "traceroute ${location.getHost()}"
+    }
+    def proc = command.execute()
+    proc.consumeProcessOutput(standardOut, standardErr)
+    proc.waitFor()
+    println "Route trace to ${location.getHost()}"
+    println("""out:
+                $standardOut
+                err:
+                $standardErr""")
+}
