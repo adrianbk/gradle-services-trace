@@ -8,11 +8,10 @@ task build << {
             new URL(url).text
             println "done $it"
         }
-    } catch (IOException e) {
+    } catch (Exception e) {
         traceRoute(new URL(url))
         throw e
     }
-
 }
 
 task trace << {
