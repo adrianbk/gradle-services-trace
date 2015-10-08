@@ -1,7 +1,7 @@
 
 String url = "https://services.gradle.org/versions/all"
 
-int counter = project.hasProperty("counter") ? project.property("counter") : 10
+int counter = project.hasProperty("counter") ? Integer.valueOf(project.property("counter")) : 10
 task build << {
     try {
         (counter).times {
