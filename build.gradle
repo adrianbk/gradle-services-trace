@@ -1,16 +1,17 @@
-
 String url = "https://services.gradle.org/versions/all"
 
 int counter = project.hasProperty("counter") ? Integer.valueOf(project.property("counter")) : 10
 task build << {
-    try {
-        (counter).times {
+    (counter).times {
+        def start = System.currentTimeMillis()
+        try {
             new URL(url).text
-            println "done $it"
+            logger.lifecycle "success #$it ${toSeconds(start, System.currentTimeMillis())} seconds"
+        } catch (Exception e) {
+            logger.lifecycle "failed #$it ${toSeconds(start, System.currentTimeMillis())} seconds"
+            traceRoute(new URL(url))
+            throw e
         }
-    } catch (Exception e) {
-        traceRoute(new URL(url))
-        throw e
     }
 }
 
@@ -30,9 +31,13 @@ void traceRoute(URL location) {
     def proc = command.execute()
     proc.consumeProcessOutput(standardOut, standardErr)
     proc.waitFor()
-    println "Route trace to ${location.getHost()}"
-    println("""out:
+    logger.lifecycle "Route trace to ${location.getHost()}"
+    logger.lifecycle("""out:
                 $standardOut
                 err:
                 $standardErr""")
+}
+
+def toSeconds(start, end) {
+    (end - start) / 1000
 }
