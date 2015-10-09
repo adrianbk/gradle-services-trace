@@ -1,4 +1,4 @@
-String url = "https://207.223.250.8/versions/all"
+String url = "http://207.223.250.8/versions/all"
 
 int counter = project.hasProperty("counter") ? Integer.valueOf(project.property("counter")) : 10
 task build << {
